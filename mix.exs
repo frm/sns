@@ -1,4 +1,4 @@
-defmodule Sns.MixProject do
+defmodule SNS.MixProject do
   use Mix.Project
 
   def project do
@@ -18,6 +18,14 @@ defmodule Sns.MixProject do
   end
 
   defp deps do
-    []
+    [
+      {:cowboy, ">= 2.0.0"},
+      {:ex_aws, "~> 2.4"},
+      {:ex_aws_sns, "~> 2.3"},
+      {:hackney, "~> 1.9"},
+      {:jason, "~> 1.4"},
+      {:plug, "~> 1.12"},
+      {:plug_cowboy, ">= 2.0.0"}
+    ]
   end
 end

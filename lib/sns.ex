@@ -1,18 +1,25 @@
-defmodule Sns do
-  @moduledoc """
-  Documentation for `Sns`.
-  """
+defmodule SNS do
+  defmacro __using__(opts) do
+    quote bind_quoted: [opts: opts], location: :keep do
+      @name Keyword.get(opts, :name, __MODULE__)
+      @port opts[:port]
+      @scheme opts[:scheme]
 
-  @doc """
-  Hello world.
+      use Supervisor
 
-  ## Examples
+      def start_link(args) do
+        Supervisor.start_link(__MODULE__, args, name: @name)
+      end
 
-      iex> Sns.hello()
-      :world
+      @impl true
+      def init(_args) do
+        children = [
+          {Plug.Cowboy, scheme: @scheme, plug: SNS.Router, options: [port: @port]}
+        ]
 
-  """
-  def hello do
-    :world
+        opts = [strategy: :one_for_one, name: Module.concat(@name, Supervisor)]
+        Supervisor.init(children, opts)
+      end
+    end
   end
 end
