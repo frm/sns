@@ -27,6 +27,20 @@ defmodule SNS.API do
   end
 
   defp request(request) do
-    ExAws.request(request, SNS.AWS.config())
+    ExAws.request(request, aws_config())
+  end
+
+  defp aws_config do
+    [
+      secret_access_key: config!(:secret_access_key),
+      access_key_id: config!(:access_key_id),
+      region: config!(:region),
+      host: host_with_prefix(),
+      scheme: config!(:scheme)
+    ]
+  end
+
+  defp host_with_prefix do
+    "sns.#{config!(:region)}.#{config!(:host)}"
   end
 end

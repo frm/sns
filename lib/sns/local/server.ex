@@ -1,4 +1,4 @@
-defmodule SNS.Dev.Server do
+defmodule SNS.Local.Server do
   use SNS, scheme: :http, port: 8080
 
   def start do
@@ -6,6 +6,6 @@ defmodule SNS.Dev.Server do
   end
 
   def handle(message) do
-    SNS.Dev.Handler.handle(message)
+    SNS.Local.Handler.handle(message)
   end
 end

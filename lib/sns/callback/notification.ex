@@ -1,5 +1,5 @@
 defmodule SNS.Callback.Notification do
-  import SNS.Config, only: [config: 3]
+  import SNS.Config, only: [config: 2]
 
   def handle(%{"Message" => message}) do
     subscription_handler().handle(message)
@@ -10,6 +10,6 @@ defmodule SNS.Callback.Notification do
   def handle(_), do: {:error, :badarg}
 
   defp subscription_handler do
-    config(:subscription_handler, nil, SNS.Dev.Handler)
+    config(:subscription_handler, SNS.Local.Handler)
   end
 end

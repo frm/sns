@@ -2,8 +2,14 @@ defmodule SNS.Config do
   @typep key :: atom
   @typep value :: term
 
+  @spec config(key, value) :: value
+  def config(key, default \\ nil) do
+    get_env(key)
+    |> parse_config(nil, default)
+  end
+
   @spec config(key, key, value) :: value
-  def config(key, param \\ nil, default \\ nil) do
+  def config(key, param, default) do
     get_env(key)
     |> parse_config(param, default)
   end

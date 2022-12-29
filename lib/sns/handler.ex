@@ -8,7 +8,7 @@ defmodule SNS.Handler do
       require Logger
 
       def handle(value) do
-        Logger.info("SNS.SubscriptionHandler.handle/1: #{inspect(value)}")
+        Logger.info("SNS.Handler.handle/1: #{inspect(value)}")
 
         {:ok, value}
       end
