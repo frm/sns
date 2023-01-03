@@ -1,46 +1,23 @@
 defmodule SNS.API do
-  import SNS.Config, only: [config!: 1, config!: 2]
+  @callback subscribe(binary, binary, binary, keyword) :: {:ok, any} | {:error, atom}
+  @callback confirm_subscription(binary, binary, keyword) :: {:ok, any} | {:error, atom}
+  @callback publish(binary, keyword) :: {:ok, any} | {:error, atom}
 
-  def subscribe(topic_arn, protocol, endpoint, opts \\ [])
+  import SNS.Config, only: [config!: 1]
 
-  def subscribe("arn:" <> _ = topic_arn, protocol, endpoint, opts) do
-    ExAws.SNS.subscribe(topic_arn, protocol, endpoint, opts)
-    |> request()
+  def subscribe(topic, protocol, endpoint, opts \\ []) do
+    adapter().subscribe(topic, protocol, endpoint, opts)
   end
 
-  def subscribe(topic, protocol, endpoint, opts) do
-    region = config!(:region)
-    account_id = config!(:sns, :account_id)
-    topic_arn = "arn:aws:sns:#{region}:#{account_id}:#{topic}"
-
-    subscribe(topic_arn, protocol, endpoint, opts)
-  end
-
-  def confirm_subscription(topic_arn, token, authenticate_on_unsubscribe \\ false) do
-    ExAws.SNS.confirm_subscription(topic_arn, token, authenticate_on_unsubscribe)
-    |> request()
+  def confirm_subscription(topic_arn, token, opts) do
+    adapter().confirm_subscription(topic_arn, token, opts)
   end
 
   def publish(message, opts \\ []) do
-    ExAws.SNS.publish(message, opts)
-    |> request()
+    adapter().publish(message, opts)
   end
 
-  defp request(request) do
-    ExAws.request(request, aws_config())
-  end
-
-  defp aws_config do
-    [
-      secret_access_key: config!(:secret_access_key),
-      access_key_id: config!(:access_key_id),
-      region: config!(:region),
-      host: host_with_prefix(),
-      scheme: config!(:scheme)
-    ]
-  end
-
-  defp host_with_prefix do
-    "sns.#{config!(:region)}.#{config!(:host)}"
+  defp adapter do
+    config!(:adapter)
   end
 end

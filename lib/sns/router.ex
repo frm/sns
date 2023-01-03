@@ -12,9 +12,17 @@ defmodule SNS.Router do
   plug(:match)
   plug(:dispatch)
 
+  def call(conn, opts) do
+    handler = Keyword.fetch!(opts, :handler)
+    conn = put_private(conn, :sns, handler: handler)
+
+    super(conn, opts)
+  end
+
   post "/" do
     with %{"Type" => _type} <- conn.params,
-         {:ok, _} <- Callback.handle(conn.params) do
+         opts <- conn.private[:sns],
+         {:ok, _} <- Callback.handle(conn.params, opts) do
       send_resp(conn, 200, "")
     else
       _ ->

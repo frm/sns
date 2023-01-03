@@ -1,5 +1,5 @@
 defmodule SNS.Callback.SubscriptionConfirmation do
-  def handle(%{"SubscribeURL" => subscribe_url}) do
+  def handle(%{"SubscribeURL" => subscribe_url}, _opts) do
     # TODO: add signature confirmation
     case :hackney.get(subscribe_url) do
       {:ok, 200, _, _} -> {:ok, 200}
@@ -8,5 +8,5 @@ defmodule SNS.Callback.SubscriptionConfirmation do
     end
   end
 
-  def handle(_), do: {:error, :badarg}
+  def handle(_, _), do: {:error, :badarg}
 end
