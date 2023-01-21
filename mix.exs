@@ -20,7 +20,7 @@ defmodule SNS.MixProject do
   defp deps do
     [
       {:cowboy, ">= 2.0.0"},
-      {:ex_aws, github: "avenueplace/ex_aws", tag: "2.4.1"},
+      {:ex_aws, github: "avenueplace/ex_aws", tag: "2.4.1", override: true},
       {:ex_aws_sns, "~> 2.3"},
       {:hackney, "~> 1.9"},
       {:jason, "~> 1.4"},
