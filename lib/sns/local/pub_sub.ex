@@ -1,6 +1,8 @@
 defmodule SNS.Local.PubSub do
   use GenServer
 
+  @max_timeout 30_000
+
   def start_link(opts) do
     name = Keyword.get(opts, :name, __MODULE__)
 
@@ -33,6 +35,12 @@ defmodule SNS.Local.PubSub do
 
   defp do_publish(endpoint, message) do
     json = Jason.encode!(%{"Type" => "Notification", "Message" => message})
-    :hackney.post(endpoint, [{"content-type", "application/json"}], json)
+
+    :hackney.post(
+      endpoint,
+      [{"content-type", "application/json"}],
+      json,
+      {:recv_timeout, @max_timeout}
+    )
   end
 end
