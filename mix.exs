@@ -4,7 +4,7 @@ defmodule SNS.MixProject do
   def project do
     [
       app: :sns,
-      version: "0.1.0",
+      version: "0.2.2",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps()
