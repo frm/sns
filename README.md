@@ -1,39 +1,36 @@
-SNS
-===
+# SNS
 
 SNS is the internal wrapper for AWS SNS used at Avenue.
 
 A few goodies:
 
-* Automatically subscribes to SNS via HTTP/HTTPS protocol on startup;
-* Abstracts away the nasty HTTP callback flow;
-* Allows configuring a local pub sub that mocks the AWS API so you can develop
+- Automatically subscribes to SNS via HTTP/HTTPS protocol on startup;
+- Abstracts away the nasty HTTP callback flow;
+- Allows configuring a local pub sub that mocks the AWS API so you can develop
   locally and test with confidence without AWS configs or testing hacks;
-* Allows you to set up multiple different subscriptions in the same app, perfect
+- Allows you to set up multiple different subscriptions in the same app, perfect
   for umbrella apps.
 
 **Table of Contents**
 
-* [Installation](#installation)
-* [Quick Start](#quick-start)
-* [Usage](#usage)
-* [Development](#development)
-* [About](#about)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Usage](#usage)
+- [Development](#development)
+- [About](#about)
 
-Installation
-------------
+## Installation
 
 Add `:sns` as a dependency in your `mix.exs`. Until this package is production
 ready, please use the latest tag from GitHub.
 
 ```elixir
 def deps do
-  [{:sns, git: "git@github.com:avenueplace/sns.git", tag: "0.2.2"}]
+  [{:sns, git: "git@github.com:avenueplace/sns.git", tag: "0.2.3"}]
 end
 ```
 
-Quick Start
------------
+## Quick Start
 
 tl;dr:
 
@@ -109,15 +106,14 @@ end
 
 If you want a detailed explanation on what all of this is, see below.
 
-Usage
------
+## Usage
 
 SNS was built to have two distinct modes that act similarly
 
 - when in development or test, you should be able to make use of everything that AWS
-provides you without actually having to configure it.
+  provides you without actually having to configure it.
 - when in production, you should hit AWS but allow `:sns` to handle subscription
-confirmation and all those things developers don't want to handle.
+  confirmation and all those things developers don't want to handle.
 
 There is a base set of config params that are shared across both modes, which
 you'll always need:
@@ -198,11 +194,12 @@ Depending on what you want to do, the next stages differ.
 ### I want to use it in development
 
 Perfect, so you'll have to do two things:
+
 1. add `SNS.Local.PubSub` to your `application.ex` file, just like in the
    `SNS.Subscription` example above. This is a pub sub server that mimics
    AWS behaviour;
 2. configure `:sns` to use the mock API adapter by adding `adapter:
-   SNS.API.Mock` to the `config/config.exs` file as per the example in
+SNS.API.Mock` to the `config/config.exs` file as per the example in
    [Quick Start](#quick-start).
 
 ### I want to use it in production
@@ -325,8 +322,7 @@ In the example above, we configure two umbrella apps. In this case, each of them
 would have a dedicated endpoint to handle SNS callbacks and they could even each
 have a different subscription topic.
 
-Development
------------
+## Development
 
 If you want to help develop, please feel free to open issues, pull requests, the
 works. All contributions welcome but they **must** follow the [Code of Conduct][coc].
@@ -338,8 +334,7 @@ handle the callbacks:
 SNS.Local.Server.start() # starts the server
 ```
 
-About
------
+## About
 
 &copy; 2022 Infinite Turtles, Lda.
 

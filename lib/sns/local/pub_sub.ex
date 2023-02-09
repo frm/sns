@@ -40,7 +40,7 @@ defmodule SNS.Local.PubSub do
       endpoint,
       [{"content-type", "application/json"}],
       json,
-      {:recv_timeout, @max_timeout}
+      [recv_timeout: @max_timeout]
     )
   end
 end
