@@ -5,15 +5,17 @@ defmodule SNS.Subscription do
 
       use Task, restart: :transient
 
+      import SNS.Config, only: [parse_config_value!: 1]
+
       def start_link(args) do
         Task.start_link(__MODULE__, :run, [args])
       end
 
       def run(args) do
         options = Keyword.merge(@opts, args)
-        topic = Keyword.fetch!(options, :topic)
-        endpoint = Keyword.fetch!(options, :endpoint)
-        protocol = Keyword.fetch!(options, :protocol)
+        topic = Keyword.fetch!(options, :topic) |> parse_config_value!()
+        endpoint = Keyword.fetch!(options, :endpoint) |> parse_config_value!()
+        protocol = Keyword.fetch!(options, :protocol) |> parse_config_value!()
 
         SNS.API.subscribe(topic, protocol, endpoint, options)
       end
