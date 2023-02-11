@@ -26,7 +26,7 @@ ready, please use the latest tag from GitHub.
 
 ```elixir
 def deps do
-  [{:sns, git: "git@github.com:avenueplace/sns.git", tag: "0.2.3"}]
+  [{:sns, git: "git@github.com:avenueplace/sns.git", tag: "0.3.0"}]
 end
 ```
 
