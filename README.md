@@ -322,6 +322,39 @@ In the example above, we configure two umbrella apps. In this case, each of them
 would have a dedicated endpoint to handle SNS callbacks and they could even each
 have a different subscription topic.
 
+### Production security concerns
+
+Since this library relies on adding a publicly accessible endpoint to confirm
+subscriptions and receive events, we need to protect against an outside party
+jamming it. To do that, you can use route obfuscation.
+
+As an example:
+
+```elixir
+defmodule MyAppWeb.Router do
+  use MyAppWeb, :router
+
+  # ...
+
+  post "/sns/:api_key/callback",
+    SNS.Router,
+    handler: MyApp.SNS.Handler,
+    verify_with: {"api_key", {:system, "INTERNAL_SNS_API_KEY"}}
+
+  # ...
+end
+```
+
+Using a route param with the `:verify_with` option will cause the plug to
+validate the path is the same as your internal API Key to prevent malicious
+third-parties. While not a complete solution, this helps easily obfuscate the
+endpoint being used.
+
+The `:verify_with` receives a tuple with the first element being the route
+param to check against and the second element either the value of the API key or
+a `{:system, env_var_name}` tuple. This will check the environment in runtime to
+avoid compile-time env var issues.
+
 ## Development
 
 If you want to help develop, please feel free to open issues, pull requests, the
