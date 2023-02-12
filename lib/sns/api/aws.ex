@@ -1,7 +1,7 @@
 defmodule SNS.API.AWS do
   @behaviour SNS.API
 
-  import SNS.Config, only: [config!: 1, config!: 2]
+  import SNS.Config, only: [config: 1, config!: 1, config!: 2]
 
   def subscribe(topic_arn, protocol, endpoint, opts \\ [])
 
@@ -35,16 +35,24 @@ defmodule SNS.API.AWS do
   end
 
   defp aws_config do
-    [
-      secret_access_key: config!(:secret_access_key),
-      access_key_id: config!(:access_key_id),
-      region: config!(:region),
-      host: host_with_prefix(),
-      scheme: config!(:scheme)
-    ]
+    [region: config!(:region)]
+    |> put_aws_config_value(:access_key_id)
+    |> put_aws_config_value(:secret_access_key)
+    |> put_aws_config_value(:scheme)
+    |> put_host_with_prefix()
   end
 
-  defp host_with_prefix do
-    "sns.#{config!(:region)}.#{config!(:host)}"
+  defp put_aws_config_value(opts, key) do
+    case config(key) do
+      nil -> opts
+      value -> Keyword.put(opts, key, value)
+    end
+  end
+
+  defp put_host_with_prefix(opts) do
+    case config(:host) do
+      nil -> opts
+      host -> Keyword.put(opts, :host, "sns.#{config!(:region)}.#{host}")
+    end
   end
 end

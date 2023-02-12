@@ -42,12 +42,12 @@ tl;dr:
 ```elixir
 # config/config.exs
 config :sns,
-  # requires you to have these environment variables set up,
-  # even if you don't use the AWS API
   scheme: {:system, "AWS_SNS_SCHEME"},
   host: {:system, "AWS_SNS_HOST"},
   secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"},
   access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
+  # requires you to have this environment variable set up,
+  # even if you don't use the AWS API
   region: {:system, "AWS_REGION"},
   # if running locally instead of using AWS, use SNS.API.Mock instead
   adapter: SNS.API.AWS
@@ -121,12 +121,12 @@ you'll always need:
 ```elixir
 # config/config.exs
 config :sns,
-  # requires you to have these environment variables set up,
-  # even if you don't use the AWS API
   scheme: {:system, "AWS_SNS_SCHEME"},
   host: {:system, "AWS_SNS_HOST"},
   secret_access_key: {:system, "AWS_SECRET_ACCESS_KEY"},
   access_key_id: {:system, "AWS_ACCESS_KEY_ID"},
+  # requires you to have this environment variable set up,
+  # even if you don't use the AWS API
   region: {:system, "AWS_REGION"}
 ```
 
