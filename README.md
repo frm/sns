@@ -1,5 +1,8 @@
 # SNS
 
+**⚠️ WARNING: This library is missing automatic tests and is not yet deemed
+production ready. Proceed at your own peril ⚠️**
+
 SNS is the internal wrapper for AWS SNS used at Avenue.
 
 A few goodies:
