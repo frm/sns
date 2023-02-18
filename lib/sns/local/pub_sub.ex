@@ -14,7 +14,15 @@ defmodule SNS.Local.PubSub do
   end
 
   def publish(name \\ __MODULE__, topic, message) do
-    GenServer.call(name, {:publish, topic, message})
+    # This call will go through the network, so the default 5000ms timeout
+    # isn't enough. It's safe to use :infinity because it will always timeout
+    # with @max_timeout in the :hackney.post/4 call.
+    #
+    # We should prefer :infinity to @max_timeout because using @max_timeout
+    # here will cause the function to timeout before the :hackney.post/4. The
+    # @max_timeout in :hackney.post/4 will actually end after this one as the
+    # countdown starts a few ms later.
+    GenServer.call(name, {:publish, topic, message}, :infinity)
   end
 
   def init(_) do
@@ -40,7 +48,7 @@ defmodule SNS.Local.PubSub do
       endpoint,
       [{"content-type", "application/json"}],
       json,
-      [recv_timeout: @max_timeout]
+      recv_timeout: @max_timeout
     )
   end
 end
