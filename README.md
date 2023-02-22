@@ -55,6 +55,11 @@ config :sns,
   # if running locally instead of using AWS, use SNS.API.Mock instead
   adapter: SNS.API.AWS
 
+config :my_app, MyApp.SNS.Subscription,
+  endpoint: {:system, "SNS_ENDPOINT"},
+  topic: {:system, "SNS_TOPIC"},
+  protocol: "http" # you'll want "https" in production
+
 
 # (optional) lib/application.ex
 def MyApp.Application do
@@ -65,7 +70,8 @@ def MyApp.Application do
     children = [
       # optional, automatically subscribes on startup,
       # remove it if you want to subscribe to a topic manually
-      MyApp.SNS.Subscription,
+      {MyApp.SNS.Subscription,
+        Application.fetch_env!(:my_app, MyApp.SNS.Subscription},
       # only add this if you're running locally, instead of using AWS,
       # for development purposes only.
       SNS.Local.PubSub
@@ -79,10 +85,7 @@ end
 defmodule MyApp.SNS.Subscription do
   # optional, only do this if you want to automatically subscribe to the given
   # topic on startup
-  use SNS.Subscription,
-    endpoint: Application.get_env(:my_app, __MODULE__)[:endpoint],
-    protocol: Application.get_env(:my_app, __MODULE__)[:protocol],
-    topic: Application.get_env(:my_app, __MODULE__)[:topic]
+  use SNS.Subscription
 end
 
 
@@ -176,19 +179,24 @@ def MyApp.Application do
   def start(_type, _args) do
     children = [
       # automatically subscribes on startup
-      MyApp.SNS.Subscription
+      {MyApp.SNS.Subscription,
+        Application.fetch_env!(:my_app, MyApp.SNS.Subscription},
     ]
 
     # ...
   end
 end
 
+# config/config.exs
+# you can hardcode these values or use them as env variables
+config :my_app, MyApp.SNS.Subscription,
+  endpoint: {:system, "SNS_ENDPOINT"},
+  topic: {:system, "SNS_TOPIC"},
+  protocol: "http" # make sure you use "https" in prod
+
 # lib/my_app/sns/subscription.ex
 defmodule MyApp.SNS.Subscription do
-  use SNS.Subscription,
-    endpoint: Application.get_env(:my_app, __MODULE__)[:endpoint],
-    protocol: Application.get_env(:my_app, __MODULE__)[:protocol],
-    topic: Application.get_env(:my_app, __MODULE__)[:topic]
+  use SNS.Subscription
 end
 ```
 
@@ -249,7 +257,10 @@ def AppOne.Application do
     children = [
       # optional, automatically subscribes on startup,
       # remove it if you want to subscribe to a topic manually
-      AppOne.SNS.Subscription,
+      {
+        AppOne.SNS.Subscription,
+        Application.fetch_env!(:app_one, AppOne.SNS.Subscription)
+      },
       # only add this if you're running locally, instead of using AWS,
       # for development purposes only.
       SNS.Local.PubSub
@@ -263,10 +274,7 @@ end
 defmodule AppOne.SNS.Subscription do
   # optional, only do this if you want to automatically subscribe to the given
   # topic on startup
-  use SNS.Subscription,
-    endpoint: Application.get_env(:app_one, __MODULE__)[:endpoint],
-    protocol: Application.get_env(:app_one, __MODULE__)[:protocol],
-    topic: Application.get_env(:app_one, __MODULE__)[:topic]
+  use SNS.Subscription
 end
 
 #
@@ -300,7 +308,10 @@ def AppTwo.Application do
     children = [
       # optional, automatically subscribes on startup,
       # remove it if you want to subscribe to a topic manually
-      AppTwo.SNS.Subscription,
+      {
+        AppTwo.SNS.Subscription,
+        Application.fetch_env!(:app_two, AppTwo.SNS.Subscription)
+      },
       # only add this if you're running locally, instead of using AWS,
       # for development purposes only.
       SNS.Local.PubSub
@@ -314,10 +325,7 @@ end
 defmodule AppTwo.SNS.Subscription do
   # optional, only do this if you want to automatically subscribe to the given
   # topic on startup
-  use SNS.Subscription,
-    endpoint: Application.get_env(:app_two, __MODULE__)[:endpoint],
-    protocol: Application.get_env(:app_two, __MODULE__)[:protocol],
-    topic: Application.get_env(:app_two, __MODULE__)[:topic]
+  use SNS.Subscription
 end
 ```
 
