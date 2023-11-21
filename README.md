@@ -3,7 +3,7 @@
 **⚠️ WARNING: This library is missing automatic tests and is not yet deemed
 production ready. Proceed at your own peril ⚠️**
 
-SNS is the internal wrapper for AWS SNS used at Avenue.
+SNS is the internal wrapper for AWS SNS used in some of my projects.
 
 A few goodies:
 
@@ -29,7 +29,7 @@ ready, please use the latest tag from GitHub.
 
 ```elixir
 def deps do
-  [{:sns, git: "git@github.com:avenueplace/sns.git", tag: "0.4.0"}]
+  [{:sns, git: "git@github.com:frm/sns.git", tag: "0.4.0"}]
 end
 ```
 
@@ -380,7 +380,7 @@ SNS.Local.Server.start() # starts the server
 
 ## About
 
-&copy; 2022 Infinite Turtles, Lda.
+&copy; 2022 Fernando Mendes
 
 It is open-source, made available for free, and is subject to the terms in its
 [license].
